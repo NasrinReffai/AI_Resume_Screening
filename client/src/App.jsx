@@ -6,6 +6,10 @@ import EditProfile from "./pages/EditProfile";
 import ResumeUpload from "./pages/ResumeUpload";
 import ResumeAnalysis from "./pages/ResumeAnalysis";
 import Interview from "./pages/Interview";
+import ResumeOptimization from "./pages/ResumeOptimization";
+import ResumeBuilder from "./pages/ResumeBuilder";
+import ResumeCenter from "./pages/ResumeCenter";
+import Reports from "./pages/Reports";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -33,6 +37,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/resume-center" element={<ResumeCenter />} />
         <Route
           path="/resume"
           element={
@@ -51,7 +56,9 @@ function App() {
 
         />
         <Route path="/interview" element={<Interview />} />
-      
+        <Route path="/optimization" element={<ResumeOptimization />} />
+      <Route path="/resume-builder" element={<ResumeBuilder />} />
+      <Route path="/reports" element={<Reports />} />
       </Routes>
     </BrowserRouter>
   );

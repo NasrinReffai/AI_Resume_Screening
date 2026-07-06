@@ -1,0 +1,367 @@
+* {
+  box-sizing: border-box;
+}
+
+.register-page {
+  min-height: 100vh;
+  display: flex;
+  font-family: "Segoe UI", sans-serif;
+  background: #f8fafc;
+}
+
+.register-left {
+  width: 39%;
+  min-height: 100vh;
+  padding: 50px 55px;
+  color: white;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.45), transparent 28%),
+    radial-gradient(circle at 80% 80%, rgba(37, 99, 235, 0.4), transparent 30%),
+    linear-gradient(135deg, #020617, #111827, #1e1b4b);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  position: relative;
+}
+
+.register-left::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 45px 45px;
+  opacity: 0.3;
+}
+
+.register-left > * {
+  position: relative;
+  z-index: 1;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 80px;
+}
+
+.brand-icon {
+  width: 62px;
+  height: 62px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #8b5cf6, #38bdf8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 800;
+  box-shadow: 0 15px 35px rgba(59, 130, 246, 0.35);
+}
+
+.brand h2 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.brand h2::after {
+  content: "AI";
+  color: #8b5cf6;
+}
+
+.brand p {
+  margin: 2px 0 0;
+  color: #cbd5e1;
+}
+
+.register-left h1 {
+  font-size: 50px;
+  line-height: 1.16;
+  margin: 0;
+  font-weight: 850;
+  letter-spacing: -1px;
+}
+
+.register-left h1 span {
+  background: linear-gradient(90deg, #38bdf8, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.left-text {
+  margin-top: 25px;
+  max-width: 420px;
+  color: #dbeafe;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.features {
+  margin-top: 35px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.feature-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 15px;
+  background: rgba(124, 58, 237, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.08);
+}
+
+.feature h4 {
+  margin: 0 0 5px;
+  font-size: 16px;
+}
+
+.feature p {
+  margin: 0;
+  color: #cbd5e1;
+  font-size: 14px;
+}
+
+.bottom-glow {
+  width: 150px;
+  height: 110px;
+  border-radius: 30px;
+  background: rgba(124, 58, 237, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 58px;
+  box-shadow: 0 0 60px rgba(124, 58, 237, 0.55);
+}
+
+.register-right {
+  width: 61%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 45px;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(124, 58, 237, 0.08), transparent 30%),
+    linear-gradient(135deg, #ffffff, #f1f5f9);
+}
+
+.register-card {
+  width: 100%;
+  max-width: 560px;
+  padding: 38px 42px;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 28px;
+  box-shadow: 0 25px 70px rgba(15, 23, 42, 0.16);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+.user-icon {
+  width: 78px;
+  height: 78px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8b5cf6, #2563eb);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  box-shadow: 0 16px 35px rgba(37, 99, 235, 0.3);
+}
+
+.register-card h2 {
+  text-align: center;
+  margin: 0;
+  font-size: 31px;
+  color: #0f172a;
+}
+
+.subtitle {
+  text-align: center;
+  color: #64748b;
+  margin: 9px 0 28px;
+}
+
+.error-box {
+  padding: 13px 15px;
+  border-radius: 13px;
+  background: #fee2e2;
+  color: #b91c1c;
+  margin-bottom: 18px;
+  font-size: 14px;
+}
+
+.input-group {
+  margin-bottom: 18px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 9px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.input-box {
+  height: 56px;
+  border: 1px solid #dbe3ef;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  background: #ffffff;
+  transition: 0.25s;
+}
+
+.input-box:focus-within {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+}
+
+.input-box span {
+  margin-right: 12px;
+  color: #64748b;
+}
+
+.input-box input {
+  border: none;
+  outline: none;
+  width: 100%;
+  height: 100%;
+  font-size: 15px;
+  color: #0f172a;
+}
+
+.input-box input::placeholder {
+  color: #94a3b8;
+}
+
+.eye-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.strength-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin: 6px 0 8px;
+  color: #64748b;
+}
+
+.weak {
+  color: #ef4444;
+}
+
+.medium {
+  color: #f59e0b;
+}
+
+.strong {
+  color: #22c55e;
+}
+
+.strength-bars {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.strength-bars span {
+  height: 5px;
+  flex: 1;
+  border-radius: 10px;
+  background: #e2e8f0;
+}
+
+.strength-bars span.active {
+  background: linear-gradient(90deg, #8b5cf6, #2563eb);
+}
+
+.create-btn {
+  width: 100%;
+  height: 56px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(90deg, #7c3aed, #2563eb);
+  color: white;
+  font-size: 17px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.create-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 38px rgba(37, 99, 235, 0.28);
+}
+
+.create-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.signin-text {
+  text-align: center;
+  margin: 24px 0 0;
+  color: #64748b;
+}
+
+.signin-text a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+@media (max-width: 1000px) {
+  .register-page {
+    flex-direction: column;
+  }
+
+  .register-left,
+  .register-right {
+    width: 100%;
+    min-height: auto;
+  }
+
+  .register-left {
+    padding: 35px 25px;
+  }
+
+  .brand {
+    margin-bottom: 40px;
+  }
+
+  .register-left h1 {
+    font-size: 38px;
+  }
+
+  .bottom-glow {
+    display: none;
+  }
+
+  .register-right {
+    padding: 28px 16px;
+  }
+
+  .register-card {
+    padding: 30px 22px;
+  }
+}

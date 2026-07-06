@@ -10,70 +10,135 @@ function EditProfile() {
     username: "",
     education: "",
     skills: "",
-    profile_images: null
   });
 
+  const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (e) => {
-    if (e.target.name === "profile_images") {
-      setFormData({ ...formData, profile_images: e.target.files[0] });
-    } else {
-      setFormData({ ...formData, [e.target.name]: e.target.value });
-    }
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const handleSubmit = async (e) => {
-
+  const handleUpdate = async (e) => {
     e.preventDefault();
-    if (!formData.username || !formData.education || !formData.skills || !formData.profile_images) {
-      alert("All fields are required");
-      return;
-    }
-    const token = localStorage.getItem("token");
-
-    const data = new FormData();
-    data.append("username", formData.username);
-    data.append("education", formData.education);
-    data.append("skills", formData.skills);
-
-    if (formData.profile_images) {
-      data.append("profile_images", formData.profile_images);
-    }
-
 
     try {
+      setLoading(true);
+
+      const token = localStorage.getItem("token");
+      const data = new FormData();
+
+      if (formData.username.trim()) {
+        data.append("username", formData.username);
+      }
+
+      if (formData.education.trim()) {
+        data.append("education", formData.education);
+      }
+
+      if (formData.skills.trim()) {
+        data.append("skills", formData.skills);
+      }
+
+      if (image) {
+        data.append("profile_images", image);
+      }
+
       await api.put("/profile", data, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
       });
 
-      alert("Profile updated");
+      alert("Profile updated successfully");
       navigate("/profile");
     } catch (err) {
-      console.log(err.response?.data || err.message);
-      alert(err.response?.data?.error || err.response?.data?.msg || "Update failed");
+      alert(err.response?.data?.msg || "Profile update failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
       <Navbar />
-      <div className="min-vh-100 bg-light d-flex justify-content-center align-items-center py-5">
-        <div className="card shadow p-4" style={{ width: "450px" }}>
-          <h3 className="text-center mb-4">Edit Profile</h3>
 
-          <form onSubmit={handleSubmit}>
-            <input className="form-control mb-3" name="username" placeholder="Username" onChange={handleChange} />
+      <div className="min-vh-100 bg-light d-flex align-items-center justify-content-center py-5">
+        <div
+          className="card shadow border-0 rounded-4 p-4"
+          style={{ maxWidth: "520px", width: "100%" }}
+        >
+          <h2 className="text-center fw-bold mb-2">Edit Profile</h2>
+          <p className="text-center text-muted mb-4">
+            Update only the fields you want to change
+          </p>
 
-            <input className="form-control mb-3" name="education" placeholder="Education" onChange={handleChange} />
+          <form onSubmit={handleUpdate}>
+            <div className="mb-3">
+              <label className="form-label fw-semibold">full Name</label>
+              <input
+                type="text"
+                name="username"
+                className="form-control"
+                placeholder="Enter new username"
+                value={formData.username}
+                onChange={handleChange}
+              />
+            </div>
 
-            <input className="form-control mb-3" name="skills" placeholder="React,Node.js,MongoDB" onChange={handleChange} />
+            <div className="mb-3">
+              <label className="form-label fw-semibold">Education</label>
+              <input
+                type="text"
+                name="education"
+                className="form-control"
+                placeholder="Example: BCA / ME CSE"
+                value={formData.education}
+                onChange={handleChange}
+              />
+            </div>
 
-            <input className="form-control mb-4" type="file" name="profile_images" onChange={handleChange} />
+            <div className="mb-3">
+              <label className="form-label fw-semibold">Skills</label>
+              <input
+                type="text"
+                name="skills"
+                className="form-control"
+                placeholder="Example: React, Node.js, MongoDB"
+                value={formData.skills}
+                onChange={handleChange}
+              />
+              <small className="text-muted">
+                Separate skills using comma
+              </small>
+            </div>
 
+            <div className="mb-4">
+              <label className="form-label fw-semibold">
+                Profile Image
+              </label>
+              <input
+                type="file"
+                className="form-control"
+                accept="image/*"
+                onChange={(e) => setImage(e.target.files[0])}
+              />
+              <small className="text-muted">
+                Leave empty if you don't want to change image
+              </small>
+            </div>
 
-            <button className="btn btn-primary w-100">Update Profile</button>
-            
+            <button
+              type="submit"
+              className="btn btn-primary w-100 py-2 fw-semibold"
+              disabled={loading}
+            >
+              {loading ? "Updating..." : "Update Profile"}
+            </button>
           </form>
         </div>
       </div>

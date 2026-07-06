@@ -20,8 +20,9 @@ function Profile() {
 
                 setUser(res.data);
             } catch (err) {
-                console.log(err);
-            }
+      console.log("PROFILE ERROR:", err.response?.data || err.message);
+      localStorage.removeItem("token");
+      navigate("/login");         }
         };
 
         fetchProfile();
@@ -53,7 +54,7 @@ function Profile() {
                             />
 
                             <div>
-                                <h1 className="fw-bold">{user.fullName}</h1>
+                               <h1 className="fw-bold">{user.fullName || user.username}</h1>
                                 <h5 className="text-muted">{user.email}</h5>
 
                                 <p className="mt-3 fs-5">
@@ -82,7 +83,7 @@ function Profile() {
                                 rel="noreferrer"
                                 className="btn btn-outline-success mt-3 mb-4 w-25 d-flex"
                             >
-                                View Resume
+                                Download Resume
                             </a>
                         )}
 

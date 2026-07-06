@@ -2,7 +2,9 @@ import Navbar from "../components/Navbar";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 import { useState, useRef } from "react";
+import { FaEnvelope, FaPhoneAlt, FaLinkedin, FaGithub, FaMapMarkerAlt } from "react-icons/fa";
 import api from "../api/axios";
+import html2pdf from "html2pdf.js";
 
 function ResumeAnalysis() {
   const [result, setResult] = useState(null);
@@ -28,6 +30,8 @@ function ResumeAnalysis() {
           }
         }
       );
+
+
 
       setResult(res.data.analysis);
     } catch (err) {
@@ -61,32 +65,58 @@ function ResumeAnalysis() {
     }
   };
 
-  const downloadResume = async () => {
+const downloadResume = async () => {
+  try {
     const input = resumeRef.current;
 
+    if (!input) {
+      alert("Resume preview not found");
+      return;
+    }
+
     const canvas = await html2canvas(input, {
-      scale: 2
+      scale: 2,
+      useCORS: true
     });
 
     const imgData = canvas.toDataURL("image/png");
 
     const pdf = new jsPDF("p", "mm", "a4");
 
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight =
-      (canvas.height * pdfWidth) / canvas.width;
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
 
-    pdf.addImage(
-      imgData,
-      "PNG",
-      0,
-      0,
-      pdfWidth,
-      pdfHeight
-    );
+    const imgHeight = (canvas.height * pageWidth) / canvas.width;
+
+    let heightLeft = imgHeight;
+    let position = 0;
+
+    pdf.addImage(imgData, "PNG", 0, position, pageWidth, imgHeight);
+    heightLeft -= pageHeight;
+
+    while (heightLeft > 10) {
+      position = position - pageHeight;
+
+      pdf.addPage();
+
+      pdf.addImage(
+        imgData,
+        "PNG",
+        0,
+        position,
+        pageWidth,
+        imgHeight
+      );
+
+      heightLeft -= pageHeight;
+    }
 
     pdf.save("ATS_Resume.pdf");
-  };
+  } catch (err) {
+    console.log("PDF Error:", err);
+    alert("PDF download failed");
+  }
+};
 
   return (
     <>
@@ -130,225 +160,230 @@ function ResumeAnalysis() {
 
             {result && (
               <div className="mt-4">
-                <h4>Score: {result.score}%</h4>
+                <h4 className="fw-bold mb-3">Resume Analysis Result</h4>
+
+                <h5>ATS Score: {result.score || 0}%</h5>
 
                 <div className="progress mb-4" style={{ height: "22px" }}>
                   <div
                     className="progress-bar"
-                    style={{ width: `${result.score}%` }}
+                    style={{ width: `${result.score || 0}%` }}
                   >
-                    {result.score}%
+                    {result.score || 0}%
                   </div>
                 </div>
 
-                <h5>Summary</h5>
-                <p>{result.summary}</p>
+                {result.summary && (
+                  <>
+                    <h5>Summary</h5>
+                    <p>{result.summary}</p>
+                    <hr />
+                  </>
+                )}
 
-                <hr />
+                {result.strengths?.length > 0 && (
+                  <>
+                    <h5>Strengths</h5>
+                    <ul>
+                      {result.strengths.map((item, index) => (
+                        <li key={index}>{item}</li>
+                      ))}
+                    </ul>
+                    <hr />
+                  </>
+                )}
 
-                <h5>Strengths</h5>
-                <ul>
-                  {result.strengths?.map((item, index) => (
-                    <li key={index}>{item}</li>
-                  ))}
-                </ul>
+                {result.weaknesses?.length > 0 && (
+                  <>
+                    <h5>Weaknesses</h5>
+                    <ul>
+                      {result.weaknesses.map((item, index) => (
+                        <li key={index}>{item}</li>
+                      ))}
+                    </ul>
+                    <hr />
+                  </>
+                )}
 
-                <hr />
+                {result.missingSkills?.length > 0 && (
+                  <>
+                    <h5>Missing Skills</h5>
+                    <div className="mb-3">
+                      {result.missingSkills.map((skill, index) => (
+                        <span key={index} className="badge bg-danger me-2 mb-2">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                    <hr />
+                  </>
+                )}
 
-                <h5>Weaknesses</h5>
-                <ul>
-                  {result.weaknesses?.map((item, index) => (
-                    <li key={index}>{item}</li>
-                  ))}
-                </ul>
+                {result.suggestions?.length > 0 && (
+                  <>
+                    <h5>Suggestions</h5>
+                    <ul>
+                      {result.suggestions.map((item, index) => (
+                        <li key={index}>{item}</li>
+                      ))}
+                    </ul>
+                    <hr />
+                  </>
+                )}
 
-                <hr />
-
-                <h5>Missing Skills</h5>
-                <div>
-                  {result.missingSkills?.map((skill, index) => (
-                    <span key={index} className="badge bg-danger me-2 mb-2">
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-
-                <hr />
-
-                <h5>Suggestions</h5>
-                <ul>
-                  {result.suggestions?.map((item, index) => (
-                    <li key={index}>{item}</li>
-                  ))}
-                </ul>
-
-                <hr />
-
-                <h5>Interview Questions</h5>
-                <ul>
-                  {result.interviewQuestions?.map((q, index) => (
-                    <li key={index}>
-                      {typeof q === "string" ? q : q.question}
-                    </li>
-                  ))}
-                </ul>
+                {result.interviewQuestions?.length > 0 && (
+                  <>
+                    <h5>Interview Questions</h5>
+                    <ul>
+                      {result.interviewQuestions.map((q, index) => (
+                        <li key={index}>{typeof q === "string" ? q : q.question}</li>
+                      ))}
+                    </ul>
+                  </>
+                )}
               </div>
             )}
 
             {atsResume && (
               <>
-                <div
-                  ref={resumeRef}
-                  className="mt-5 bg-white border rounded-4 shadow-sm"
-                  style={{
-                    maxWidth: "850px",
-                    margin: "0 auto",
-                    padding: "45px",
-                    color: "#222",
-                    fontFamily: "Arial, sans-serif"
-                  }}
-                >
-                  <div className="text-center border-bottom pb-3 mb-4">
-                    <h1 style={{ fontSize: "30px", fontWeight: "700", letterSpacing: "1px" }}>
-                      {atsResume.personalInfo.name}
-                    </h1>
+               
+                <div ref={resumeRef} className="card mt-3 p-5 shadow border-0">
+                  <div className="text-center mb-4">
+                    <h2 className="fw-bold mb-1">{atsResume.personalInfo?.name}</h2>
+                    <h5 className="text-primary mb-3">{atsResume.targetRole}</h5>
 
-                    <h5 style={{ color: "#555", fontWeight: "500" }}>
-                      {jobRole}
-                    </h5>
+                    <p className="text-muted small mb-0">
+                      {atsResume.personalInfo?.email} | {atsResume.personalInfo?.phone} |{" "}
+                      {atsResume.personalInfo?.location}
+                    </p>
 
-                    <p style={{ fontSize: "14px", marginBottom: "0" }}>
-                      {atsResume.personalInfo.email} | {atsResume.personalInfo.phone}
+                    <p className="text-muted small">
+                      {atsResume.personalInfo?.linkedin} | {atsResume.personalInfo?.github}
                     </p>
                   </div>
 
-                  <section className="mb-4">
-                    <h4 className="resume-heading">Professional Summary</h4>
-                    <p>{atsResume.professionalSummary}</p>
-                  </section>
+                  <hr />
 
-                  <section className="mb-4">
-                    <h4 className="resume-heading">Technical Skills</h4>
+                  <h5 className="fw-bold text-uppercase border-bottom pb-2">
+                    Professional Summary
+                  </h5>
+                  <p>{atsResume.professionalSummary}</p>
 
-                    <div className="mb-3">
-                      <b>Programming Languages</b>
-                      <p>
-                        {atsResume.technicalSkills?.programmingLanguages?.join(", ")}
-                      </p>
-                    </div>
+                  <h5 className="fw-bold text-uppercase border-bottom pb-2 mt-4">
+                    Technical Skills
+                  </h5>
 
-                    <div className="mb-3">
-                      <b>Frontend</b>
-                      <p>
-                        {atsResume.technicalSkills?.frontend?.join(", ")}
-                      </p>
-                    </div>
-
-                    <div className="mb-3">
-                      <b>Backend</b>
-                      <p>
-                        {atsResume.technicalSkills?.backend?.join(", ")}
-                      </p>
-                    </div>
-
-                    <div className="mb-3">
-                      <b>Database</b>
-                      <p>
-                        {atsResume.technicalSkills?.database?.join(", ")}
-                      </p>
-                    </div>
-
-                    <div className="mb-3">
-                      <b>Tools</b>
-                      <p>
-                        {atsResume.technicalSkills?.tools?.join(", ")}
-                      </p>
-                    </div>
-                  </section>
-
-                  {atsResume.experience?.length > 0 && (
-                    <section className="mb-4">
-                      <h4 className="resume-heading">Professional Experience</h4>
-
-                      {atsResume.experience.map((exp, index) => (
-                        <div key={index} className="mb-3">
-                          <h6 className="fw-bold mb-1">
-                            {exp.position} - {exp.company}
-                          </h6>
-
-                          <p className="mb-1 text-muted">
-                            {exp.duration}
-                          </p>
-
-                          <ul>
-                            {exp.responsibilities?.map((item, i) => (
-                              <li key={i}>{item}</li>
-                            ))}
-                          </ul>
-                        </div>
+                  {Object.entries(atsResume.technicalSkills || {}).map(([category, skills]) => (
+                    <div key={category} className="mb-2">
+                      <strong>
+                        {category
+                          .replace(/([A-Z])/g, " $1")
+                          .replace(/^./, (c) => c.toUpperCase())}
+                        :
+                      </strong>{" "}
+                      {(skills || []).map((skill, i) => (
+                        <span key={i} className="badge bg-light text-dark border me-2 mb-2">
+                          {skill}
+                        </span>
                       ))}
-                    </section>
-                  )}
+                    </div>
+                  ))}
 
-                  {atsResume.projects?.length > 0 && (
-                    <section className="mb-4">
-                      <h4 className="resume-heading">Projects</h4>
+                  <h5 className="fw-bold text-uppercase border-bottom pb-2 mt-4">
+                    Professional Experience
+                  </h5>
 
-                      {atsResume.projects.map((project, index) => (
-                        <div key={index} className="mb-3">
-                          <h6 className="fw-bold mb-1">{project.title}</h6>
+                  {atsResume.experience?.map((exp, index) => (
+                    <div key={index} className="mb-3">
+                      <div className="d-flex justify-content-between">
+                        <h6 className="fw-bold mb-1">{exp.position}</h6>
+                        <span className="text-muted small">{exp.duration}</span>
+                      </div>
 
-                          <ul>
-                            {project.description?.map((point, i) => (
-                              <li key={i}>{point}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
-                    </section>
-                  )}
+                      <p className="mb-1">
+                        <strong>{exp.company}</strong>
+                      </p>
 
-                  {atsResume.education?.length > 0 && (
-                    <section className="mb-4">
-                      <h4 className="resume-heading">Education</h4>
+                      <ul>
+                        {(exp.responsibilities || []).map((item, i) => (
+                          <li key={i}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
 
-                      {atsResume.education.map((edu, index) => (
-                        <p key={index} className="mb-1">
-                          <b>{edu.degree}</b> - {edu.institution} ({edu.year})
-                        </p>
-                      ))}
-                    </section>
-                  )}
+                  <h5 className="fw-bold text-uppercase border-bottom pb-2 mt-4">
+                    Projects
+                  </h5>
+
+                  {atsResume.projects?.map((project, index) => (
+                    <div key={index} className="mb-3">
+                      <h6 className="fw-bold">{project.title}</h6>
+
+                      <ul>
+                        {(project.description || []).map((item, i) => (
+                          <li key={i}>{item}</li>
+                        ))}
+                      </ul>
+
+                      <div>
+                        <strong>Technologies: </strong>
+                        {(project.technologies || []).map((tech, i) => (
+                          <span key={i} className="badge bg-light text-dark border me-2 mb-2">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+
+                  <h5 className="fw-bold text-uppercase border-bottom pb-2 mt-4">
+                    Education
+                  </h5>
+
+                  {atsResume.education?.map((edu, index) => (
+                    <div key={index} className="mb-2">
+                      <h6 className="fw-bold mb-1">{edu.degree}</h6>
+                      <p className="mb-0">{edu.institution}</p>
+                      <p className="text-muted small">{edu.year}</p>
+                    </div>
+                  ))}
 
                   {atsResume.certifications?.length > 0 && (
-                    <section className="mb-4">
-                      <h4 className="resume-heading">Certifications</h4>
+                    <>
+                      <h5 className="fw-bold text-uppercase border-bottom pb-2 mt-4">
+                        Certifications
+                      </h5>
                       <ul>
                         {atsResume.certifications.map((cert, index) => (
                           <li key={index}>{cert}</li>
                         ))}
                       </ul>
-                    </section>
-                  )}
-
-                  {atsResume.achievements?.length > 0 && (
-                    <section>
-                      <h4 className="resume-heading">Achievements</h4>
-                      <ul>
-                        {atsResume.achievements.map((ach, index) => (
-                          <li key={index}>{ach}</li>
-                        ))}
-                      </ul>
-                    </section>
+                    </>
                   )}
                 </div>
 
-                <button
-                  className="btn btn-danger w-100 mt-3"
+                {atsResume.roleSuggestions?.length > 0 && (
+                  <div className="card mt-4 p-4 shadow-sm border-0">
+                    <h5 className="fw-bold">Role Suggestions</h5>
+                    <div>
+                      {atsResume.roleSuggestions.map((item, index) => (
+                        <span key={index} className="badge bg-primary me-2 mb-2">
+                          {item}
+                        </span>
+                      ))}
+                       <button
+                  type="button"
+                  className="btn btn-danger mt-4 mb-3"
                   onClick={downloadResume}
                 >
                   Download ATS Resume PDF
                 </button>
+
+                    </div>
+                    
+                  </div>
+                )}
               </>
             )}
           </div>

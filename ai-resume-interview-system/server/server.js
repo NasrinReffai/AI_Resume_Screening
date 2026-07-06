@@ -8,6 +8,10 @@ const userRoutes=require('./routes/userRoutes');
 const interviewRoutes = require("./routes/interviewRoutes");
 const optimizationRoutes =
 require("./routes/optimizationRoutes");
+const resumeBuilderRoutes = require("./routes/resumeBuilderRoutes");
+const resumeCenterRoutes = require("./routes/resumeCenterRoutes");
+const reportRoutes = require("./routes/reportRoutes");
+
 
 const app=express();
 app.use(cors());
@@ -19,6 +23,10 @@ app.use('/',userRoutes);
 
 app.use("/interview", interviewRoutes);
 app.use("/api/optimization",optimizationRoutes);
+app.use("/resume-builder", resumeBuilderRoutes);
+app.use("/resume-center", resumeCenterRoutes);
+app.use("/reports", reportRoutes);
+
 
 mongoose.connect(process.env.MONGO_URI)
    .then(()=>console.log('database connected'))

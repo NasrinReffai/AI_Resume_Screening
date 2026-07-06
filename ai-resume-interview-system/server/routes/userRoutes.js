@@ -1,7 +1,7 @@
 const express=require('express');
 const router=express.Router();
 const authMiddleware=require('../middleware/authMiddleware');
-const {getProfile,updateProfile, uploadResume ,analyzeResume,getAnalysisHistory,generateATSResume} =require('../controllers/userController');
+const {getProfile,updateProfile, uploadResume ,analyzeResume,generateATSResume,getAnalysisHistory} =require('../controllers/userController');
 const upload = require('../middleware/upload');
 
 
@@ -29,5 +29,5 @@ router.post(
   authMiddleware,
   generateATSResume
 );
-
+router.post("/analysis-history",authMiddleware,getAnalysisHistory);
 module.exports=router;

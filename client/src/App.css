@@ -7,3 +7,27 @@
   margin-bottom: 12px;
   color: #222;
 }
+.resume-card {
+  background: white;
+  color: #222;
+}
+
+.section {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.section h4 {
+  margin-bottom: 15px;
+}
+
+@media print {
+  .resume-card {
+    box-shadow: none !important;
+  }
+
+  .section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
