@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import Layout from "../layout/Layout";
 import api from "../api/axios";
 
 function Profile() {
@@ -29,8 +29,8 @@ function Profile() {
     }, []);
 
     return (
-        <>
-            <Navbar />
+        <Layout>
+         
 
             <div className="min-vh-100 bg-light py-5">
                 <div className="container d-flex justify-content-center">
@@ -93,20 +93,10 @@ function Profile() {
                             Edit Profile
                         </button>
 
-                        {/* {user.resumeUrl && (
-              <a
-                href={user.resumeUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="btn btn-outline-success mt-3"
-              >
-                View Resume ({user.resumeName})
-              </a>
-            )} */}
                     </div>
                 </div>
             </div>
-        </>
+        </Layout>
     );
 }
 

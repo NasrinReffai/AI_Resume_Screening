@@ -18,7 +18,12 @@ function Navbar() {
         <Link className="btn btn-outline-light me-2" to="/profile">
           Profile
         </Link>
-
+        <button
+          className="btn btn-outline-light me-2"
+          onClick={() => navigate("/dashboard")}
+        >
+          Dashboard
+        </button>
         <Link className="btn btn-outline-light me-2" to="/resume-center">
           Resume Center
         </Link>

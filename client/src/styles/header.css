@@ -1,0 +1,158 @@
+.header {
+    background: #fff;
+    border-radius: 18px;
+    padding: 16px 28px;
+    height: 90px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    margin-bottom: 30px;
+}
+
+/* Left */
+.header-left{
+    display:flex;
+    align-items:center;
+    min-width:180px;
+}
+
+.header-logo{
+    width:155px;
+    height:auto;
+    object-fit:contain;
+    display:block;
+}
+
+/* Center */
+.header-center{
+    flex:1;
+    display:flex;
+    justify-content:center;
+}
+
+/* Search */
+.search-box{
+    width:100%;
+    max-width:620px;
+    height:50px;
+
+    display:flex;
+    align-items:center;
+
+    background:#F8FAFC;
+    border:1px solid #E2E8F0;
+    border-radius:14px;
+
+    padding:0 18px;
+    transition:.3s;
+}
+
+.search-box:hover{
+    border-color:#2563EB;
+}
+
+.search-box:focus-within{
+    border-color:#2563EB;
+    box-shadow:0 0 0 4px rgba(37,99,235,.12);
+}
+
+.search-box i{
+    color:#64748B;
+    font-size:18px;
+    margin-right:12px;
+}
+
+.search-box input{
+    width:100%;
+    border:none;
+    outline:none;
+    background:transparent;
+    font-size:15px;
+    color:#0F172A;
+}
+
+.search-box input::placeholder{
+    color:#94A3B8;
+}
+
+/* Right */
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:16px;
+}
+
+/* Notification */
+.header-btn{
+    width:46px;
+    height:46px;
+
+    border:none;
+    border-radius:50%;
+
+    background:#F1F5F9;
+    color:#334155;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    cursor:pointer;
+    transition:.3s;
+}
+
+.header-btn i{
+    font-size:19px;
+}
+
+.header-btn:hover{
+    background:#2563EB;
+    color:white;
+    transform:translateY(-2px);
+}
+
+/* Profile */
+.profile-btn{
+    height:46px;
+    padding:0 16px;
+
+    border:none;
+    border-radius:14px;
+
+    background:#F8FAFC;
+
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    cursor:pointer;
+    transition:.3s;
+
+    font-size:15px;
+    font-weight:600;
+    color:#0F172A;
+}
+
+.profile-btn:hover{
+    background:#EFF6FF;
+}
+
+.profile-btn .bi-person-circle{
+    font-size:22px;
+    color:#2563EB;
+}
+
+.profile-btn .bi-chevron-down{
+    font-size:13px;
+    color:#64748B;
+}
+.profile-name{
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-width:130px;
+}

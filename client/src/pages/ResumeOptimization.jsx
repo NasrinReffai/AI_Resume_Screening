@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import Navbar from "../components/Navbar";
+import Layout from "../layout/Layout";
 import api from "../api/axios";
 import html2pdf from "html2pdf.js";
 import {
@@ -121,8 +121,8 @@ function ResumeOptimization() {
   };
 
   return (
-    <>
-      <Navbar />
+    <Layout>
+
 
       <div className="container mt-5">
         <h2 className="fw-bold mb-4">AI Job Match Analyzer</h2>
@@ -471,7 +471,7 @@ function ResumeOptimization() {
           </div>
         )}
       </div>
-    </>
+    </Layout>
   );
 }
 

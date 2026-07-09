@@ -25,29 +25,63 @@ function MinimalResume({ resume, form }) {
   };
 
   const downloadPDF = async () => {
-    const canvas = await html2canvas(resumeRef.current, {
-      scale: 2,
-      useCORS: true
-    });
+    const element = resumeRef.current;
+    const scale = 2;
 
-    const imgData = canvas.toDataURL("image/png");
+    const canvas = await html2canvas(element, { scale, useCORS: true });
+
     const pdf = new jsPDF("p", "mm", "a4");
-
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
-    const imgHeight = (canvas.height * pageWidth) / canvas.width;
 
-    let heightLeft = imgHeight;
-    let position = 0;
+    const mmPerPx = pageWidth / canvas.width;
+    const pageHeightPx = pageHeight / mmPerPx;
 
-    pdf.addImage(imgData, "PNG", 0, position, pageWidth, imgHeight);
-    heightLeft -= pageHeight;
+    // Collect safe cut points = bottom edge of each block (in canvas px)
+    const containerRect = element.getBoundingClientRect();
+    const blocks = element.querySelectorAll(".pdf-block");
 
-    while (heightLeft > 10) {
-      position -= pageHeight;
-      pdf.addPage();
-      pdf.addImage(imgData, "PNG", 0, position, pageWidth, imgHeight);
-      heightLeft -= pageHeight;
+    const candidates = Array.from(blocks)
+      .map((el) => (el.getBoundingClientRect().bottom - containerRect.top) * scale)
+      .filter((y) => y > 0 && y < canvas.height)
+      .sort((a, b) => a - b);
+
+    let currentY = 0;
+
+    while (currentY < canvas.height) {
+      const idealEnd = currentY + pageHeightPx;
+      let sliceEnd;
+
+      if (idealEnd >= canvas.height) {
+        sliceEnd = canvas.height;
+      } else {
+        // pick the latest safe boundary that still fits on this page
+        const best = candidates.filter((c) => c > currentY && c <= idealEnd).pop();
+        // fallback: if a single block is taller than one page, force a cut
+        sliceEnd = best || idealEnd;
+      }
+
+      const sliceHeightPx = sliceEnd - currentY;
+
+      const pageCanvas = document.createElement("canvas");
+      pageCanvas.width = canvas.width;
+      pageCanvas.height = sliceHeightPx;
+
+      pageCanvas
+        .getContext("2d")
+        .drawImage(
+          canvas,
+          0, currentY, canvas.width, sliceHeightPx,
+          0, 0, canvas.width, sliceHeightPx
+        );
+
+      const sliceImg = pageCanvas.toDataURL("image/png");
+      const sliceHeightMM = sliceHeightPx * mmPerPx;
+
+      if (currentY > 0) pdf.addPage();
+      pdf.addImage(sliceImg, "PNG", 0, 0, pageWidth, sliceHeightMM);
+
+      currentY = sliceEnd;
     }
 
     pdf.save("Minimal_ATS_Resume.pdf");
@@ -122,7 +156,7 @@ function MinimalResume({ resume, form }) {
         {experience.length > 0 && (
           <Section title="Experience">
             {experience.map((exp, index) => (
-              <div key={index} style={{ marginBottom: "14px" }}>
+              <div key={index} className="pdf-block" style={{ marginBottom: "14px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <strong>{exp.role || exp.position || exp.title}</strong>
                   <span>{exp.duration || exp.dates}</span>
@@ -145,7 +179,7 @@ function MinimalResume({ resume, form }) {
         {projects.length > 0 && (
           <Section title="Projects">
             {projects.map((project, index) => (
-              <div key={index} style={{ marginBottom: "14px" }}>
+              <div key={index} className="pdf-block" style={{ marginBottom: "14px" }}>
                 <strong>{project.title || project.name}</strong>
 
                 <ul>
@@ -168,7 +202,7 @@ function MinimalResume({ resume, form }) {
         {education.length > 0 && (
           <Section title="Education">
             {education.map((edu, index) => (
-              <div key={index} style={{ marginBottom: "8px" }}>
+              <div key={index} className="pdf-block" style={{ marginBottom: "8px" }}>
                 <strong>{edu.degree}</strong>
                 <p style={{ margin: "2px 0" }}>{edu.institution || edu.college}</p>
                 <p style={{ margin: 0 }}>{edu.year || edu.duration}</p>
@@ -193,7 +227,7 @@ function MinimalResume({ resume, form }) {
 
 function Section({ title, children }) {
   return (
-    <div style={{ marginTop: "22px" }}>
+    <div className="pdf-block" style={{ marginTop: "22px" }}>
       <h3
         style={{
           fontSize: "15px",

@@ -10,6 +10,7 @@ import ResumeOptimization from "./pages/ResumeOptimization";
 import ResumeBuilder from "./pages/ResumeBuilder";
 import ResumeCenter from "./pages/ResumeCenter";
 import Reports from "./pages/Reports";
+import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -59,6 +60,7 @@ function App() {
         <Route path="/optimization" element={<ResumeOptimization />} />
       <Route path="/resume-builder" element={<ResumeBuilder />} />
       <Route path="/reports" element={<Reports />} />
+      <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
   );

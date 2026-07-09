@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Navbar from "../components/Navbar";
+import Layout from "../layout/Layout";
 import api from "../api/axios";
 
 function Interview() {
@@ -67,8 +67,8 @@ function Interview() {
   };
 
   return (
-    <>
-      <Navbar />
+    <Layout>
+    
 
       <div className="container mt-5">
         <h2 className="mb-3">AI Resume-Based Mock Interview</h2>
@@ -148,7 +148,7 @@ function Interview() {
           </div>
         ))}
       </div>
-    </>
+    </Layout>
   );
 }
 

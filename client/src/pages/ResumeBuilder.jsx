@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import Navbar from "../components/Navbar";
+import Layout from "../layout/Layout";
 import ResumePreview from "../components/ResumePreview";
 import api from "../api/axios";
 import html2canvas from "html2canvas";
@@ -140,8 +140,8 @@ const printResume = () => {
   };
 
   return (
-    <>
-      <Navbar />
+    <Layout>
+   
 
       <div className="container mt-5 mb-5">
         <h2 className="mb-4">AI Resume Builder</h2>
@@ -460,7 +460,7 @@ const printResume = () => {
         </div>
 
       </div>
-    </>
+    </Layout>
   );
 }
 

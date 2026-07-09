@@ -1,4 +1,4 @@
-import Navbar from "../components/Navbar";
+import Layout from "../layout/Layout";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 import { useState, useRef } from "react";
@@ -119,8 +119,8 @@ const downloadResume = async () => {
 };
 
   return (
-    <>
-      <Navbar />
+    <Layout>
+    
 
       <div className="min-vh-100 bg-light py-5">
         <div className="container">
@@ -389,7 +389,7 @@ const downloadResume = async () => {
           </div>
         </div>
       </div>
-    </>
+    </Layout>
   );
 }
 

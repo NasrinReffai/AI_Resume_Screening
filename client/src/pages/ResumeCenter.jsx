@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Navbar from "../components/Navbar";
+import Layout from "../layout/Layout";
 import api from "../api/axios";
 
 function ResumeCenter() {
@@ -27,8 +27,8 @@ function ResumeCenter() {
     }, []);
 
     return (
-        <>
-            <Navbar />
+        <Layout>
+          
 
             <div className="container mt-5">
                 <h2 className="mb-2">Resume Center</h2>
@@ -138,7 +138,7 @@ function ResumeCenter() {
                     </div>
                 )}
             </div>
-        </>
+        </Layout>
     );
 }
 

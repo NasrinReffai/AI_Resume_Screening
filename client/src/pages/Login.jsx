@@ -31,7 +31,7 @@ function Login() {
             const res = await api.post("/login", formData);
 
             localStorage.setItem("token", res.data.token);
-            navigate("/profile");
+            navigate("/dashboard");
         } catch (err) {
             alert(err.response?.data?.msg || "Login failed");
         } finally {
